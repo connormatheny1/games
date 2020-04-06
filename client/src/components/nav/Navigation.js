@@ -30,7 +30,7 @@ const Navigation = (props) => {
                     <Link to="/">Home</Link>
                 </li>
                 <li>
-                    <Link to="/crazy/rooms">Crazy 8s</Link>
+                    <Link to="/crazy">Crazy 8s</Link>
                 </li>
             </ul>
             {props.isLoggedIn ? (

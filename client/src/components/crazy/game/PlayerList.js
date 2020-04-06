@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { Event } from "react-socket-io"
 import {
     Button,
 
@@ -62,6 +63,7 @@ const PlayerList = props => {
                     </div>
                 ))
             }
+            <Event event="user-connected" handler={() => console.log('foofofofofooo')}/>
         </div>
     )
 }

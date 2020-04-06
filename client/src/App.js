@@ -11,8 +11,7 @@ import Footer from "./components/panels/Footer"
 import GamePage from "./components/crazy/game/GamePage"
 import Rooms from "./components/crazy/rooms/Rooms"
 import axios from "axios"
-//import socketIOClient from 'socket.io-client'
-//import socket from "./socketconnect";
+import socketIOClient from 'socket.io-client'
 import {
   HashRouter as Router,
   Switch,
@@ -20,8 +19,6 @@ import {
   Link,
   NavLink
 } from "react-router-dom";
-import { useRouteMatch } from 'react-router'
-
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -31,6 +28,8 @@ const App = () => {
   const [gamesplayed, setGamesPlayed] = useState(0)
   const [avatar, setAvatar] = useState(null)
   const [roomInfo, setRoomInfo] = useState()
+  const [endpoint, setEndpoint] = useState('http://localhost:5000/')
+ // const socket = socketIOClient(endpoint)
 
   function usePersistedState(key, def){
     const [user, setUser] = useState(
@@ -41,6 +40,7 @@ const App = () => {
     }, [key, user]);
     return [user, setUser];
   }
+
 
   const [user, setUser] = usePersistedState('user', {
     username: 'unauth',
@@ -93,11 +93,9 @@ const App = () => {
         roomCreator: false,
       })
     }
-    
   }
 
   const logout = () => {
-    //setIsLoggedIn(false);
     axios.post('/users/logout', { username: user.username, rid: user.room_id, creator: user.roomCreator })
       .then(res => userAuthed(res))
       .catch(err => console.log(err))
@@ -136,10 +134,6 @@ const App = () => {
       roomCreator: res.data.creator
     })
     window.location.reload();
-
-    // axios.get(`/crazy/rooms/${user.room_id}`)
-    //   .then(res => setRoomInfo(res))
-    //   .catch(err => console.log(err))
   }
 
   return (
@@ -147,21 +141,18 @@ const App = () => {
       <Navigation updateApp={updateGrandparent} isLoggedIn={user.isLoggedIn} logout={logout} updateReg={updateRegisterModal} registerOpen={registerModal} loginOpen={loginModal} user={user} localToken={localStorage.jwtToken}/>
         <Route exact path="/" component={Home} />
         <Route 
-          path="/crazy/rooms"
+          exact
+          path="/crazy"
           render={
             (props) => <Crazy {...props} user={user} updateUserRoom={updateUserRoom} roomInfo={roomInfo}/>
           }
         />
         <Route 
-          path="/crazy/rooms/:roomId"
+          path={`/crazy/rooms/${user.room_id}`}
           render={
-            (props) => <Crazy {...props} user={user} updateUserRoom={updateUserRoom} roomInfo={roomInfo}/>
+            (props) => <GamePage {...props} user={user} roomId={user.room_id} updateUserRoom={updateUserRoom} roomInfo={roomInfo}/>
           }
         />
-        {/* <Route path="'/crazy/rooms/:roomId'" render={
-          (props) => <Crazy {...props} roomId={user.room_id} user={user}/>
-        }>
-        </Route> */}
         <Route path="/settings" component={UserSettings} />
         <Route 
           path="/profile" 

@@ -3,6 +3,8 @@ import Chat from "./Chat"
 import Game from "./Game"
 import PlayerList from "./PlayerList"
 import axios from "axios"
+import socketIOClient from 'socket.io-client'
+import { Socket } from "react-socket-io"
 import {
     H3,
     H4,
@@ -26,13 +28,22 @@ const GamePage = (props) => {
     const [creator, setCreator] = useState('')
     const [time, setTime] = useState('')
     const [minIntent, setMinIntent] = useState(false)
+    const [_socket, set_Socket] = useState()
+    const [endpoint, setEndpoint] = useState(`http://localhost:5000/crazy/rooms`)
+
+    const options = { transports: ['websockets'] }
 
     useEffect( () => {
         const fetchData = async () => {
             const result = await axios.get(`/crazy/rooms/${props.roomId}`)
             setInfo(result.data)
         }
+        const openSocket = () => {
+            // const socket = socketIOClient(endpoint)
+            // socket.emit("user-joined-room", (props.roomId, props.user.username))
+        }
         fetchData()
+        openSocket()
     }, [])
 
     const playerListToggle = () => {
@@ -57,55 +68,60 @@ const GamePage = (props) => {
             </H5>
         </div> 
     )
+    
+    
+    
 
     return(
         <>
             {
                 info.exists ? (
-                    <div className="gameCont">
-                        <div className="roomInfoHeader">
-                            <div className="left">
-                                <H3>{info.rows.room_name}</H3>
-                                <p>&nbsp;(id:{info.rows.rid})</p>
+                    <Socket uri={endpoint} options={options}>
+                        <div className="gameCont">
+                            <div className="roomInfoHeader">
+                                <div className="left">
+                                    <H3>{info.rows.room_name}</H3>
+                                    <p>&nbsp;(id:{info.rows.rid})</p>
+                                </div>
+                                <div className="right">
+                                    <span><Icon icon="new-person"/>Created by:&nbsp;<b>{info.rows.creator}</b></span>
+                                    <span>
+                                        <Icon icon="time"/> Room created:&nbsp;
+                                        <b>
+                                            {new Date(info.rows.created_at).toDateString()}, {new Date(info.rows.created_at).toLocaleTimeString('en-US')}
+                                        </b>
+                                    </span>
+                                </div>
                             </div>
-                            <div className="right">
-                                <span><Icon icon="new-person"/>Created by:&nbsp;<b>{info.rows.creator}</b></span>
-                                <span>
-                                    <Icon icon="time"/> Room created:&nbsp;
-                                    <b>
-                                        {new Date(info.rows.created_at).toDateString()}, {new Date(info.rows.created_at).toLocaleTimeString('en-US')}
-                                    </b>
-                                </span>
+                            <div className="gameBody">
+                                <div className="playerListCont">
+                                    <Drawer 
+                                        title={dialogHeader()} 
+                                        isCloseButtonShown={false} 
+                                        isOpen={playerListOpen} 
+                                        usePortal={false} 
+                                        hasBackdrop={false} 
+                                        lazy={true}
+                                        position={Position.LEFT}
+                                        size="260px" 
+                                        className="drawer"
+                                        onClose={() => {setplayerListOpen(false)}}
+                                        canOutsideClickClose={false}
+                                        canEscapeKeyClose={false}
+                                    >
+                                        <PlayerList user={props.user} users={info.users} />
+                                    </Drawer>
+                                    <Button icon={playerListIcon} minimal="true" onClick={playerListToggle} className="drawer-button" style={ playerListOpen ? {left: '238px'} : {left: '0px'}}/>
+                                </div>
+                                <div>
+                                    <Game />
+                                </div>
+                                <div>
+                                    <Chat />
+                                </div>
                             </div>
                         </div>
-                        <div className="gameBody">
-                            <div className="playerListCont">
-                                <Drawer 
-                                    title={dialogHeader()} 
-                                    isCloseButtonShown={false} 
-                                    isOpen={playerListOpen} 
-                                    usePortal={false} 
-                                    hasBackdrop={false} 
-                                    lazy={true}
-                                    position={Position.LEFT}
-                                    size="260px" 
-                                    className="drawer"
-                                    onClose={() => {setplayerListOpen(false)}}
-                                    canOutsideClickClose={false}
-                                    canEscapeKeyClose={false}
-                                >
-                                    <PlayerList user={props.user} users={info.users} />
-                                </Drawer>
-                                <Button icon={playerListIcon} minimal="true" onClick={playerListToggle} className="drawer-button" style={ playerListOpen ? {left: '238px'} : {left: '0px'}}/>
-                            </div>
-                            <div>
-                                <Game />
-                            </div>
-                            <div>
-                                <Chat />
-                            </div>
-                        </div>
-                    </div>
+                    </Socket>
                 ) : (
                     <p>How did you even get to this page?</p>
                 )

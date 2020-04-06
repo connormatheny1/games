@@ -14,17 +14,27 @@ import {
 
 const Crazy = props => {
     let { path, url } = useRouteMatch();
-
+    const [isInRoom, setIsInRoom] = useState(false)
     const updateUserRoom = (res) => {
         props.updateUserRoom(res)
     }
+
+    const updateIsInRoom = () => {
+        setIsInRoom(!isInRoom)
+    }
+
     return(
         <main className="crazy-main">
             <div className="crazyCont">
                 {
                     props.user.isLoggedIn ? (
                             props.user.room_id ? (
-                                <GamePage roomId={props.user.room_id} user={props.user}/>
+                                isInRoom ? (
+                                    <Redirect to={`/crazy/rooms/${props.user.room_id}`}/>
+                                    // <GamePage roomId={props.user.room_id} user={props.user}/>
+                                ) : (
+                                    <Rooms user={props.user} updateIsInRoom={updateIsInRoom} inRoom={isInRoom} updateUserRoom={updateUserRoom}/>
+                                )                                
                             ) : (
                                 <Rooms user={props.user} updateUserRoom={updateUserRoom}/>
                             )

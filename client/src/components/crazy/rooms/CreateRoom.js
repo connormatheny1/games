@@ -22,7 +22,6 @@ import {
     PopoverInteractionKind
 } from "@blueprintjs/core"
 
-
 const CreateRoom = props => {
     const [roomName, setRoomName] = useState('');
     const [displayName, setDisplayName] = useState('');
@@ -31,7 +30,6 @@ const CreateRoom = props => {
     const [formIntent, setFormIntent] = useState(Intent.PRIMARY)
     const [showErrorText, setShowErrorText] = useState(false)
     const [errorHelperText, setErrorHelperText] = useState("All fields are needed")
-
     const setUsernameAsDisplayName = () => {
         if(!disabled){
             setDisplayName(props.user.username)
@@ -62,6 +60,7 @@ const CreateRoom = props => {
     }
 
     const updateUser = (res) => {
+
         props.updateUserRoom(res)
     }
 

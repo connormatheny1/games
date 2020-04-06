@@ -1,17 +1,22 @@
 const createError = require('http-errors');
 const express = require('express');
+const socket_io = require("socket.io");
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const app = express();
 
-const indexRouter = require('./routes/index');
+
+const io = socket_io()
+app.io = io;
+
+const indexRouter = require('./routes/index')(io);
 const usersRouter = require('./routes/users');
 const apiRouter = require('./routes/api')
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 

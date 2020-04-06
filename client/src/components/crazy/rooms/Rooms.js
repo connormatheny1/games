@@ -30,11 +30,15 @@ const Rooms = props => {
         props.updateUserRoom(res)
     }
 
+    const updateIsInRoom = () => {
+        props.updateIsInRoom()
+    }
+
     return(
         <div className="roomCont">
             <div className="roomsLeft">
                 <CreateRoom user={props.user} updateUserRoom={updateUserRoom}/>
-                <JoinRoom user={props.user} updateUserRoom={updateUserRoom}/>
+                <JoinRoom user={props.user} updateIsInRoom={updateIsInRoom} inRoom={props.inRoom} updateUserRoom={updateUserRoom}/>
             </div>
             <BrowseRooms rooms={rooms} join={join}/>
         </div>

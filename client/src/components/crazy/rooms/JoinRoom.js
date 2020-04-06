@@ -7,6 +7,7 @@ import {
     InputGroup,
     Icon,
     H3,
+    H4,
     H5,
     Tooltip,
     Intent,
@@ -21,6 +22,16 @@ import {
     Popover,
     PopoverInteractionKind
 } from "@blueprintjs/core"
+
+import {
+    HashRouter as Router,
+    Switch,
+    Route,
+    Link,
+    NavLink,
+    useRouteMatch,
+    Redirect
+  } from "react-router-dom";
 
 const JoinRoom = props => {
     const [roomName, setRoomName] = useState('');
@@ -87,63 +98,86 @@ const JoinRoom = props => {
         }
     }
 
-    return(
-        <Card className="createRoom">
-            <H3>Join an existing room</H3>
-            <div className="flex-row">
-                <FormGroup
-                    helperText={
-                        helperTextOpen && showErrorText ? errorHelperText : null
-                    }
-                >
-                    <Label intent={formIntent}>
-                        Room Name {/* <Icon icon="info-sign" iconSize={14} /> */}
-                        <InputGroup
-                            id="roomName"
-                            large={false}
-                            type="text"
-                            placeholder="Name of room to join"
-                            rightElement={mergeIcon}
-                            intent={formIntent}
-                            onChange={(e) => setRoomName(e.currentTarget.value)}
-                        />
-                    </Label>
-                </FormGroup> 
+    const joinExistingRoom = () => {
+        props.updateIsInRoom()
+    }
 
-                <FormGroup
-                    helperText={
-                        helperTextOpen ? (
-                            !showErrorText ?
-                                "The name you'd like to use in this room, or click the icon in the box to the right of this field to display your username" 
-                                : errorHelperText
-                            ) : null
-                    }
-                >
-                    <Label intent={formIntent}>
-                        Display Name <Icon icon="help" iconSize={14}  onClick={toggleHelperText}/>
-                        <InputGroup
-                            id="displayName"
-                            large={false}
-                            type="text"
-                            placeholder="Name in this room"
-                            rightElement={userIcon}
-                            value={displayName}
-                            disabled={disabled}
-                            onChange={(e) => setDisplayName(e.currentTarget.value)}
-                            intent={formIntent}
+    return(
+        <>
+            {
+                !props.inRoom ? (
+                    <Card className="createRoom">    
+                        <H3>Seems you're already in a room....</H3>
+                        <H4>Would you like to join that one?</H4>
+                            <Button
+                                className="joinExistingButton"
+                                intent={Intent.SUCCESS}
+                                outlined="true"
+                                text="JOIN ACTIVE ROOM"
+                                onClick={joinExistingRoom}
+                                fill="true"
+                            />
+                    </Card>
+                ) : (
+                    <Card className="createRoom">    
+                        <H3>Join an existing room</H3>
+                        <div className="flex-row">
+                            <FormGroup
+                                helperText={
+                                    helperTextOpen && showErrorText ? errorHelperText : null
+                                }
+                            >
+                                <Label intent={formIntent}>
+                                    Room Name {/* <Icon icon="info-sign" iconSize={14} /> */}
+                                    <InputGroup
+                                        id="roomName"
+                                        large={false}
+                                        type="text"
+                                        placeholder="Name of room to join"
+                                        rightElement={mergeIcon}
+                                        intent={formIntent}
+                                        onChange={(e) => setRoomName(e.currentTarget.value)}
+                                    />
+                                </Label>
+                            </FormGroup> 
+
+                            <FormGroup
+                                helperText={
+                                    helperTextOpen ? (
+                                        !showErrorText ?
+                                            "The name you'd like to use in this room, or click the icon in the box to the right of this field to display your username" 
+                                            : errorHelperText
+                                        ) : null
+                                }
+                            >
+                                <Label intent={formIntent}>
+                                    Display Name <Icon icon="help" iconSize={14}  onClick={toggleHelperText}/>
+                                    <InputGroup
+                                        id="displayName"
+                                        large={false}
+                                        type="text"
+                                        placeholder="Name in this room"
+                                        rightElement={userIcon}
+                                        value={displayName}
+                                        disabled={disabled}
+                                        onChange={(e) => setDisplayName(e.currentTarget.value)}
+                                        intent={formIntent}
+                                    />
+                                </Label>
+                            </FormGroup> 
+                        </div>
+                        <Button
+                            className="createButton"
+                            intent={Intent.PRIMARY}
+                            outlined="true"
+                            text="JOIN"
+                            onClick={joinRoom}
+                            fill="true"
                         />
-                    </Label>
-                </FormGroup> 
-            </div>
-            <Button
-                className="createButton"
-                intent={Intent.PRIMARY}
-                outlined="true"
-                text="JOIN"
-                onClick={joinRoom}
-                fill="true"
-            />
-        </Card>
+                    </Card>
+                )
+            }
+        </>
     )
 }
 
