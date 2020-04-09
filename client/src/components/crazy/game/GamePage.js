@@ -29,7 +29,9 @@ const GamePage = (props) => {
     const [time, setTime] = useState('')
     const [minIntent, setMinIntent] = useState(false)
     const [_socket, set_Socket] = useState()
-    const [endpoint, setEndpoint] = useState(`http://localhost:5000/crazy/rooms`)
+    const [endpoint, setEndpoint] = useState(`http://localhost:5000/crazy/rooms/`)
+    const [users, setUsers] = useState()
+    const [rooms, setRooms] = useState()
 
     const options = { transports: ['websockets'] }
 
@@ -38,12 +40,25 @@ const GamePage = (props) => {
             const result = await axios.get(`/crazy/rooms/${props.roomId}`)
             setInfo(result.data)
         }
+        const onSocket = (socket) => {
+            
+        }
         const openSocket = () => {
-            // const socket = socketIOClient(endpoint)
-            // socket.emit("user-joined-room", (props.roomId, props.user.username))
+            const socket = socketIOClient(endpoint)
+            socket.emit("user-joined-room", {roomId: props.roomId, username: props.user.username})
+            socket.on('user-connected', (data) => {
+                console.log(data)
+                if(users == null){
+                    setUsers(data)
+                }
+                else{
+                    
+                }
+            })
         }
         fetchData()
         openSocket()
+        
     }, [])
 
     const playerListToggle = () => {
@@ -76,7 +91,6 @@ const GamePage = (props) => {
         <>
             {
                 info.exists ? (
-                    <Socket uri={endpoint} options={options}>
                         <div className="gameCont">
                             <div className="roomInfoHeader">
                                 <div className="left">
@@ -121,7 +135,6 @@ const GamePage = (props) => {
                                 </div>
                             </div>
                         </div>
-                    </Socket>
                 ) : (
                     <p>How did you even get to this page?</p>
                 )

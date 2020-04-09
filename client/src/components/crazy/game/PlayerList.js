@@ -44,6 +44,7 @@ const PlayerList = props => {
     }
 
 
+
     return(
         <div className="playerListComp">
             {
@@ -63,7 +64,6 @@ const PlayerList = props => {
                     </div>
                 ))
             }
-            <Event event="user-connected" handler={() => console.log('foofofofofooo')}/>
         </div>
     )
 }
