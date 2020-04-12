@@ -1,55 +1,70 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from "react-router-dom"
+import React, { Component } from 'react'
+import { NavLink } from "react-router-dom"
 import LoggedInNav from './LoggedInNav';
 import LoggedOutNav from "./LoggedOutNav";
+import "../../App.css"
 
-const Navigation = (props) => {
-    const [ dropdownOpen, toggleDropdown ] = useState(false);
+var socket;
 
-    const updateDropdown = (bool) => {
-        toggleDropdown(bool)
+class Navigation extends Component {
+    constructor() {
+        super();
+        this.state = {
+            dropdownOpen: false,
+            endpoint: 'localhost:5000/crazy/rooms'
+        };
+        //socket = socketIOClient(this.state.endpoint);
     }
 
-    const updateParent = (val) => {
-        props.updateApp(val)
+    updateDropdown = (bool) => {
+        this.setState({ dropdownOpen: bool})
     }
 
-    const updateReg = (val) => {
-        props.updateReg(val)
+    updateParent = (val) => {
+        this.props.updateApp(val)
     }
 
-    const logout = () => {
-        props.logout()
+    updateReg = (val) => {
+        this.props.updateReg(val)
+    }
+
+    logout = () => {
+        this.props.logout()
     }
     
-
-    return(
-        <nav className="nav">
-            <ul className="consistentNav">
-                <li>
-                    <Link to="/">Home</Link>
-                </li>
-                <li>
-                    <Link to="/crazy">Crazy 8s</Link>
-                </li>
-            </ul>
-            {props.isLoggedIn ? (
-                <LoggedInNav isLoggedIn={props.isLoggedIn} logout={logout} toggleMenu={updateDropdown} dropdownOpen={dropdownOpen} user={props.user}/>
-            ) : (
-                <LoggedOutNav updateParent={updateParent} updateRegister={updateReg} registerOpen={props.registerOpen} loginOpen={props.loginOpen}/>
-            )}
-        </nav>
-    )
+    render() {
+        return (
+            <nav className="nav">
+                <ul className="consistentNav">
+                    <li>
+                        <NavLink exact to="/">Home</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/crazy/rooms">Crazy 8s</NavLink>
+                    </li>
+                </ul>
+                {
+                    this.props.isLoggedIn ? (
+                        <LoggedInNav 
+                            isLoggedIn={this.props.isLoggedIn}
+                            logout={this.logout}
+                            toggleMenu={this.updateDropdown}
+                            dropdownOpen={this.state.dropdownOpen}
+                            user={this.props.user}
+                        />
+                    )
+                    : (
+                        <LoggedOutNav
+                            updateParent={this.updateParent}
+                            updateRegister={this.updateReg}
+                            registerOpen={this.props.registerOpen}
+                            loginOpen={this.props.loginOpen}
+                        />
+                    )
+                }
+            </nav>
+        );
+    }
 }
 
-{/* <li>
-                    {
-                        props.user.current_room_id !== 0 ? (
-                            <Link to="/crazy/rooms">Crazy 8s</Link>
-                        ) : (
-                            <Link to={`/crazy/rooms/${props.user.current_room_id}`} />
-                        )
-                    }
-                </li> */}
-
-export default Navigation
+export { Navigation, socket };

@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger, no-console, no-unused-vars */
 import React, { useState, useEffect } from "react";
 import {
     H3,
@@ -72,7 +73,7 @@ const UserProfile = (props) => {
                                 <p>Avatar: &nbsp; 
                                     {
                                         props.user.avatar >= 0 ? (
-                                            <img src={img[props.user.avatar].path} height={35} width={35}></img>
+                                            <img src={img[props.user.avatar].path} alt="user avatar icon" height={35} width={35}></img>
                                         ) : (
                                             <i className="fas fa-user-circle"></i>
                                         )
@@ -95,7 +96,7 @@ const UserProfile = (props) => {
                                                         key={i.val} 
                                                         value={i.val}
                                                         inline={true}
-                                                        labelElement={<img src={i.path} height={30} width={30}></img>}
+                                                        labelElement={<img src={i.path} alt="user avatar label element" height={30} width={30}></img>}
                                                     />                                  
                                                 )
                                             })

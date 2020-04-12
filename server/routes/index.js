@@ -1,4 +1,4 @@
-module.exports = function(io){
+module.exports = function(){
   const express = require('express');
   const bcrypt = require('bcrypt');
   const db = require('../db');

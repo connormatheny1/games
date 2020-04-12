@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger, no-console, no-unused-vars */
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import {
@@ -34,7 +35,7 @@ const LoginModal = (props) => {
     )
 
     const handleLoginClick = () => {  
-        axios.post('/login', { username, password })
+        axios.post('/users/login', { username, password })
             .then(res => {
                 props.updateUser(res)
                 console.log(res)
@@ -60,7 +61,7 @@ const LoginModal = (props) => {
 
     const handleEnterKey = (e) => {
         if(username && password && e.key === "Enter"){
-            axios.post('/login', { username, password })
+            axios.post('/users/login', { username, password })
                 .then(res => props.updateUser(res))
                 .then(toggle())
                 .catch(err => console.log(err))

@@ -1,3 +1,0 @@
-{
-    "watch": [ "./bin/www", "app.js"]
-}

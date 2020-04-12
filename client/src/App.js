@@ -1,8 +1,8 @@
+/* eslint-disable no-debugger, no-console, no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Home from './components/pages/Home';
-import Navigation from "./components/nav/Navigation";
-import Crazy from "./components/crazy/Crazy";
+import { Navigation } from "./components/nav/Navigation";
 import LoginModal from "./components/panels/LoginModal"
 import RegisterModal from "./components/panels/RegisterModal"
 import UserSettings from "./components/pages/UserSettings"
@@ -11,14 +11,7 @@ import Footer from "./components/panels/Footer"
 import GamePage from "./components/crazy/game/GamePage"
 import Rooms from "./components/crazy/rooms/Rooms"
 import axios from "axios"
-import socketIOClient from 'socket.io-client'
-import {
-  HashRouter as Router,
-  Switch,
-  Route,
-  Link,
-  NavLink
-} from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -28,8 +21,6 @@ const App = () => {
   const [gamesplayed, setGamesPlayed] = useState(0)
   const [avatar, setAvatar] = useState(null)
   const [roomInfo, setRoomInfo] = useState()
-  const [endpoint, setEndpoint] = useState('http://localhost:5000/')
- // const socket = socketIOClient(endpoint)
 
   function usePersistedState(key, def){
     const [user, setUser] = useState(
@@ -40,7 +31,6 @@ const App = () => {
     }, [key, user]);
     return [user, setUser];
   }
-
 
   const [user, setUser] = usePersistedState('user', {
     username: 'unauth',
@@ -113,7 +103,7 @@ const App = () => {
       gamesplayed: user.gamesplayed,
       avatar: val,
       uid: user.id,
-      room_id: useEffect.room_id,
+      room_id: user.room_id,
       roomCreator: user.roomCreator
     })
     window.location.reload()
@@ -136,34 +126,53 @@ const App = () => {
     window.location.reload();
   }
 
+  const setUserRoomId = (o) => {
+    setUser({
+      username: user.username,
+      isLoggedIn: user.isLoggedIn,
+      email: user.email,
+      token: user.token,
+      gameswon: user.gameswon,
+      gamesplayed: user.gamesplayed,
+      avatar: user.avatar,
+      uid: user.id,
+      room_id: o,
+      roomCreator: user.roomCreator
+    })
+    //window.location.href=`/crazy/rooms/${o}`
+  }
+
   return (
-    <Router>
-      <Navigation updateApp={updateGrandparent} isLoggedIn={user.isLoggedIn} logout={logout} updateReg={updateRegisterModal} registerOpen={registerModal} loginOpen={loginModal} user={user} localToken={localStorage.jwtToken}/>
-        <Route exact path="/" component={Home} />
-        <Route 
-          exact
-          path="/crazy"
-          render={
-            (props) => <Crazy {...props} user={user} updateUserRoom={updateUserRoom} roomInfo={roomInfo}/>
-          }
-        />
-        <Route 
-          path={`/crazy/rooms/${user.room_id}`}
-          render={
-            (props) => <GamePage {...props} user={user} roomId={user.room_id} updateUserRoom={updateUserRoom} roomInfo={roomInfo}/>
-          }
-        />
-        <Route path="/settings" component={UserSettings} />
-        <Route 
-          path="/profile" 
-          render={
-            (props) => <UserProfile {...props} user={user} updateAvatar={updateAvatar}/>
-          } 
-        />
-      <LoginModal updateUser={userAuthed} updateApp={updateGrandparent} isOpen={loginModal}/>
-      <RegisterModal updateUser={userAuthed} isOpen={registerModal} updateApp={updateRegisterModal}/>
-      <Footer></Footer>
-    </Router>
+    <>
+        <Navigation updateApp={updateGrandparent} isLoggedIn={user.isLoggedIn} logout={logout} updateReg={updateRegisterModal} registerOpen={registerModal} loginOpen={loginModal} user={user} localToken={localStorage.jwtToken}/>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route
+            exact
+            path="/crazy/rooms"
+            render={
+              ({match, props}) => <Rooms {...props} user={user} setUserRoomId={setUserRoomId} updateUserRoom={updateUserRoom} roomInfo={roomInfo}/>
+            }
+          />
+          <Route
+            exact
+            path="/crazy/rooms/:room"
+            render={
+              ({match, props}) => <GamePage {...props} user={user} users={[user]} roomId={user.room_id} updateUserRoom={updateUserRoom} roomInfo={roomInfo}/>
+            }
+          />
+          <Route path="/settings" component={UserSettings} />
+          <Route 
+            path="/profile" 
+            render={
+              ({match, props}) => <UserProfile {...props} user={user} updateAvatar={updateAvatar}/>
+            } 
+          />
+        </Switch>
+        <LoginModal updateUser={userAuthed} updateApp={updateGrandparent} isOpen={loginModal}/>
+        <RegisterModal updateUser={userAuthed} isOpen={registerModal} updateApp={updateRegisterModal}/>
+        <Footer></Footer>
+      </>
   );
 }
 

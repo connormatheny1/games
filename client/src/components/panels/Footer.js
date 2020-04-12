@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger, no-console, no-unused-vars */
 import React, { useState, useEffect } from "react"
 
 const Footer = () => {

@@ -1,9 +1,10 @@
+/* eslint-disable no-debugger, no-console, no-unused-vars */
 import React, { useState, useEffect } from "react"
-import { Event } from "react-socket-io"
 import {
     Button,
-
 } from "@blueprintjs/core"
+
+
 const PlayerList = props => {
     const [numUsers, setNumUsers] = useState()
     const [disabledJoin, setDisabledJoin] = useState()
@@ -46,26 +47,41 @@ const PlayerList = props => {
 
 
     return(
-        <div className="playerListComp">
-            {
-                props.users.map((user, i) => (
-                    <div className="player-list-item" key={i}>
-                        <div>
-                            <img src={img[user.avatar].path} height={35} width={35}></img>
-                            <span>{user.username}</span>
-                        </div>
-                        <Button
-                            className="joinButton"
-                            disabled={user.username === props.user.username ? false : true}
-                            style={btnStateStyle}
-                            onMouseEnter={joinHoverIn}
-                            onClick={joinClick}
-                        >JOIN</Button>
-                    </div>
-                ))
-            }
+        <div className="playerListComp"> 
+            <div className="player-list-item">
+                <div>
+                    <img src={img[props.user.avatar].path} alt="user avatar in sidebar list" height={35} width={35}></img>
+                    <span>{props.user.username}</span>
+                </div>
+                <Button
+                    className="joinButton"
+                    disabled={props.user.username ? false : true}
+                    style={btnStateStyle}
+                    onMouseEnter={joinHoverIn}
+                    onClick={joinClick}
+                >JOIN</Button>
+            </div>
         </div>
     )
 }
 
 export default PlayerList;
+
+
+
+
+// props.users.map((user, i) => (
+                //     <div className="player-list-item" key={i}>
+                //         <div>
+                //             <img src={img[user.avatar].path} height={35} width={35}></img>
+                //             <span>{user.username}</span>
+                //         </div>
+                //         <Button
+                //             className="joinButton"
+                //             disabled={user.username === props.user.username ? false : true}
+                //             style={btnStateStyle}
+                //             onMouseEnter={joinHoverIn}
+                //             onClick={joinClick}
+                //         >JOIN</Button>
+                //     </div>
+                // ))

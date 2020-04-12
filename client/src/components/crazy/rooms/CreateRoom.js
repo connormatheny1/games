@@ -1,5 +1,7 @@
+/* eslint-disable no-debugger, no-console, no-unused-vars */
 import React, { useState, useEffect } from "react"
 import axios from "axios"
+import { socket } from "../../nav/Navigation.js" 
 import {
     Card,
     Button,
@@ -30,6 +32,8 @@ const CreateRoom = props => {
     const [formIntent, setFormIntent] = useState(Intent.PRIMARY)
     const [showErrorText, setShowErrorText] = useState(false)
     const [errorHelperText, setErrorHelperText] = useState("All fields are needed")
+    const [idk, setIdk] = useState("idk man")
+
     const setUsernameAsDisplayName = () => {
         if(!disabled){
             setDisplayName(props.user.username)
@@ -60,21 +64,34 @@ const CreateRoom = props => {
     }
 
     const updateUser = (res) => {
-
         props.updateUserRoom(res)
     }
 
     const createRoom = () => {
         if(roomName && displayName){
             const data = {
-                roomName: roomName,
+                room: roomName,
                 displayName: displayName,
                 username: props.user.username
             }
-            axios.post('/crazy/createRoom', data)
-                .then(res => updateUser(res))
-                .catch(err => console.log(err))
+            axios.post("/crazy/rooms", {room: data.room})
+                .then((res) => {
+                    console.log(res)
+                    if(res.data.roomCreated){
+                        props.createRoomSocketEvt('room-created', data)
+                        props.setUserRoomId(roomName)
+                    }
+                    else{
+                        console.log("didnt do")
+                    }
+                })
+                .catch(err => console.error(err)) 
         }
+
+            // axios.post('/crazy/createRoom', data)
+            //     .then(res => updateUser(res))
+            //     .catch(err => console.log(err))
+        
         else{
             console.log('Please enter correct info')
             setDisplayName('');

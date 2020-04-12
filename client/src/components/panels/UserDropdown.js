@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger, no-console, no-unused-vars, jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from "react";
 import { Switch } from "@blueprintjs/core";
 import { Link } from "react-router-dom"
@@ -26,7 +27,7 @@ const UserDropdown = props => {
             </div>
             <div className="userAvatar">
                 { props.user.avatar >= 0 ? 
-                    (<img src={img[props.user.avatar].path} height={35} width={35}></img>) :
+                    (<img src={img[props.user.avatar].path} alt="user avatar icon" height={35} width={35}></img>) :
                     (<i className="fas fa-user-circle"></i>)
                 }
             </div>

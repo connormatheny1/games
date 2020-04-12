@@ -26,7 +26,7 @@ const Crazy = props => {
     return(
         <main className="crazy-main">
             <div className="crazyCont">
-                {
+                {/* {
                     props.user.isLoggedIn ? (
                             props.user.room_id ? (
                                 isInRoom ? (
@@ -41,7 +41,7 @@ const Crazy = props => {
                     ) : (
                         <p>Please login to view this content. Not registered? Register.</p>
                     )
-                }
+                } */}
             </div>
         </main>
     )

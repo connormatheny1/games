@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger, no-console, no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import "../../App.css"
@@ -127,7 +128,7 @@ const RegisterModal = (props) => {
             passwordConf: passwordConf,
             avatar: avatarChoice
         }
-        axios.post("/register", data)
+        axios.post("/users/register", data)
             .then(res => handleToasts(res))
             .catch(err => console.log(err))
     }
@@ -150,7 +151,7 @@ const RegisterModal = (props) => {
                 passwordConf: passwordConf,
                 avatar: avatarChoice
             }
-            axios.post("/register", data)
+            axios.post("/users/register", data)
                 .then(res => handleToasts(res))
                 .catch(err => console.log(err))
         }
@@ -210,7 +211,7 @@ const RegisterModal = (props) => {
                                             key={i.val} 
                                             value={i.val}
                                             inline={true}
-                                            labelElement={<img src={i.path} height={45} width={45}></img>}
+                                            labelElement={<img alt="label element for radio buttons" src={i.path} height={45} width={45}></img>}
                                         />                                  
                                     )
                                 })

@@ -1,37 +1,18 @@
+/* eslint-disable no-debugger, no-console, no-unused-vars */
 import React, { useState, useEffect } from "react"
 import axios from "axios"
+import { Link } from "react-router-dom";
 import {
     Card,
     Button,
-    ButtonGroup,
     InputGroup,
     Icon,
     H3,
     H4,
-    H5,
-    Tooltip,
     Intent,
     Label,
-    Toaster,
-    Toast,
-    ToasterPosition,
-    Position,
-    Radio,
-    RadioGroup,
     FormGroup,
-    Popover,
-    PopoverInteractionKind
 } from "@blueprintjs/core"
-
-import {
-    HashRouter as Router,
-    Switch,
-    Route,
-    Link,
-    NavLink,
-    useRouteMatch,
-    Redirect
-  } from "react-router-dom";
 
 const JoinRoom = props => {
     const [roomName, setRoomName] = useState('');
@@ -105,7 +86,7 @@ const JoinRoom = props => {
     return(
         <>
             {
-                !props.inRoom ? (
+                props.user.room_id ? (
                     <Card className="createRoom">    
                         <H3>Seems you're already in a room....</H3>
                         <H4>Would you like to join that one?</H4>
@@ -113,10 +94,10 @@ const JoinRoom = props => {
                                 className="joinExistingButton"
                                 intent={Intent.SUCCESS}
                                 outlined="true"
-                                text="JOIN ACTIVE ROOM"
-                                onClick={joinExistingRoom}
                                 fill="true"
-                            />
+                            >
+                                <Link to={`/crazy/rooms/${props.user.room_id}`} >JOIN ACTIVE ROOM</Link>
+                            </Button>
                     </Card>
                 ) : (
                     <Card className="createRoom">    

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {Link} from "react-router-dom";
+/* eslint-disable no-debugger, no-console, no-unused-vars */
+import React from 'react';
 
 const LoggedOutNav = (props) => {
 
@@ -14,7 +14,8 @@ const LoggedOutNav = (props) => {
     return(
         <ul className="loggedOutNav">
             <li style={props.registerOpen ? {"border": "1px solid #106ba3", "backgroundColor":"white"} : {"border": "none"}}>
-                <a 
+                <a
+                    href="#root" 
                     onClick={handleRegisterClick} 
                     style={props.registerOpen ? {"fontWeight": "bold"} : {"fontWeight": "normal"}}
                 >
@@ -22,7 +23,8 @@ const LoggedOutNav = (props) => {
                 </a>
             </li>
             <li style={props.loginOpen ? {"border": "1px solid #106ba3", "backgroundColor":"white"} : {"border": "none"}}>
-                <a 
+                <a
+                    href="#root" 
                     onClick={handleClick}
                     style={props.loginOpen ? {"fontWeight": "bold"} : {"fontWeight": "normal"}}
                 >
